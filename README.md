@@ -2,7 +2,7 @@
 **B-Tree Organization**
 ----------------------
 
-**SHAMELESSLY CHORIED FROM LINUX KERNEL**
+**SHAMELESSLY COPIED FROM LINUX KERNEL**
 
 **A B-Tree is a balanced tree. Each node in a B-Tree consists of aalternating pointers and items.**
 B-Trees consist of nodes. Each node in a B-Tree contains pointers to other nodes and items in an alternating sequence.
