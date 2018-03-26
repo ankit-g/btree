@@ -41,6 +41,28 @@
 #include "btree.h"
 #include <time.h>
 
+//typedef void (*visitor64_t)(void *elem, long opaque, u64 key, size_t index);
+
+static void free_nodes(void *elem, long opaque, u64 key, size_t index)
+{
+	//btree_remove64((struct btree_head64 *)opaque, key);
+	//printf("elem %d, opaque %ld, key %llu, index %ld\n", *(int *)elem, opaque, key, index);
+	if (elem)
+		free(elem);
+}
+
+static void free_keys(void *elem, long opaque, u64 key, size_t index)
+{
+	btree_remove64((struct btree_head64 *)opaque, key);
+	//printf("elem %p, opaque %ld, key %llu, index %ld\n", elem, opaque, key, index);
+}
+
+static void delete_tree(struct btree_head64 *btree)
+{
+	btree_visitor(&btree->h, &btree_geo64, (long)&btree, visitor64, free_nodes);
+	btree_visitor(&btree->h, &btree_geo64, (long)&btree, visitor64, free_keys);
+}
+
 int main(void)
 {
 	int idx;
@@ -48,17 +70,22 @@ int main(void)
 
 	srand(time(NULL));
 	btree_init64(&btree);
-	for (idx = 0; idx < 10; idx++) {
+	for (idx = 0; idx < 250000000; idx++) {
 		int *p = malloc(sizeof(int));
 		*p = rand()%1000;
-		printf("%p\n", p);
-		printf("%d\n", btree_insert64(&btree, idx, p));
-		printf("%d\n", *(int *)btree_lookup64(&btree, idx));
+		*p = idx;
+		btree_insert64(&btree, idx, p);
+		//printf("%d\n", *(int *)btree_lookup64(&btree, idx));
 //		printf("%d\n", *(int *)btree_remove64(&btree, idx));
 	}
 	printf("height %d\n", btree.h.height);
-	dumptree(&btree.h, &btree_geo64);
-	printf("%d %d\n",btree_geo64.keylen, btree_geo64.no_pairs);
-//	free(p);
+	//dumptree(&btree.h, &btree_geo64);
+	//printf("%d %d\n",btree_geo64.keylen, btree_geo64.no_pairs);
+
+	printf("%llu\n", btree_last64(&btree));
+	printf("STORED\n");
+	delete_tree(&btree);
+	//btree_visitor(&btree.h, &btree_geo64, 2, visitor64, walker);
+	//	free(p);
 	return 0;
 }

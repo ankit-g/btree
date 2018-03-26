@@ -9,7 +9,7 @@
  * from neighbours becomes more effective.  If that is the case, please
  * define AGGRESSIVE_COMPACTION below
  */
-// #define AGGRESSIVE_COMPACTION
+#define AGGRESSIVE_COMPACTION
 
 #ifndef L1_CACHE_BYTES
 #define L1_CACHE_BYTES 128
@@ -272,6 +272,7 @@ static int btree_grow(struct btree_head *head, struct btree_geo *geo)
 	node = btree_node_alloc(head);
 	if (!node)
 		return -ENOMEM;
+	printf("node %p\n", node);
 	if (head->node) {
 		fill = getfill(geo, head->node, 0);
 		setkeyb(geo, node, bkey(geo, head->node, fill - 1), 0);

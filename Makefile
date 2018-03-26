@@ -1,2 +1,2 @@
 def:
-	@gcc main.c btree.c
+	@gcc -g main.c btree.c
